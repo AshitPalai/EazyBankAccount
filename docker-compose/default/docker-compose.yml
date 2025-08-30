@@ -67,7 +67,7 @@ services:
       service: microservice-eureka-config
 
   loans1:
-    image: "ashit1206/loans:s8"
+    image: "ashit1207/loans:s8"
     container_name: loans-ms1
     ports:
       - "8091:8090"
