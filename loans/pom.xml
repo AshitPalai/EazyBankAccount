@@ -30,7 +30,7 @@
     <properties>
         <java.version>17</java.version>
         <docker.image.prefix>ashit1206</docker.image.prefix>
-        <docker.image.tag>s8</docker.image.tag>
+        <docker.image.tag>s9</docker.image.tag>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
     <dependencies>
