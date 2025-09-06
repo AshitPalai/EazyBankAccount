@@ -30,8 +30,9 @@
 		<java.version>17</java.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<docker.image.prefix>ashit1206</docker.image.prefix>
-		<docker.image.tag>s9</docker.image.tag>
+		<docker.image.tag>s11</docker.image.tag>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
+		<otelVersion>2.11.0</otelVersion>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry.javaagent</groupId>
+			<artifactId>opentelemetry-javaagent</artifactId>
+			<version>${otelVersion}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>
