@@ -1,4 +1,17 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    container_name: keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+    command: "start-dev"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   read:
     image: grafana/loki:3.1.2
     command: "-config.file=/etc/loki/config.yaml -target=read"
@@ -39,7 +52,19 @@ services:
     networks:
       <<: *loki-dns
 
-
+#  alloy:
+#    image: grafana/alloy:v1.5.1
+#    volumes:
+#      - ../observability/alloy/alloy-local-config.yaml:/etc/alloy/config.alloy:ro
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+#    ports:
+#      - 12345:12345
+#    depends_on:
+#      - gateway
+#    extends:
+#      file: common-config.yml
+#      service: network-deploy-service
 
   minio:
     image: minio/minio:RELEASE.2024-12-18T13-15-44Z
@@ -203,7 +228,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "eazybytes/configserver:s11"
+    image: "ashit1206/configserver:s11"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -220,7 +245,7 @@ services:
       OTEL_SERVICE_NAME: "configserver"
 
   eurekaserver:
-    image: "eazybytes/eurekaserver:s11"
+    image: "ashit1206/eurekaserver:s11"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -241,10 +266,8 @@ services:
       OTEL_SERVICE_NAME: "eurekaserver"
 
   accounts:
-    image: "eazybytes/accounts:s11"
+    image: "ashit1206/accounts:s11"
     container_name: accounts-ms
-    ports:
-      - "8080:8080"
     depends_on:
       configserver:
         condition: service_healthy
@@ -264,10 +287,8 @@ services:
       service: microservice-eureka-config
 
   loans:
-    image: "eazybytes/loans:s11"
+    image: "ashit1206/loans:s11"
     container_name: loans-ms
-    ports:
-      - "8090:8090"
     depends_on:
       configserver:
         condition: service_healthy
@@ -287,10 +308,8 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "eazybytes/cards:s11"
+    image: "ashit1206/cards:s11"
     container_name: cards-ms
-    ports:
-      - "9000:9000"
     depends_on:
       configserver:
         condition: service_healthy
@@ -310,7 +329,7 @@ services:
       service: microservice-eureka-config
 
   gatewayserver:
-    image: "eazybytes/gatewayserver:s11"
+    image: "ashit1206/gatewayserver:s11"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -324,6 +343,7 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "gatewayserver"
       OTEL_SERVICE_NAME: "gatewayserver"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
